@@ -1,0 +1,39 @@
+<ul id="all-spells-list" class="list-group col-md-auto">
+  {{#if (isEmptyArray this)}}
+  <h3 class="empty">You have no known spells saved.</h3>
+  {{/if}}
+  {{#each this}}
+    {{#if (isKnownSpellUrl this)}}
+      <li class="list-group-item" data-isKnown="true" data-spellId="{{#getIdFromUrl url}}{{/getIdFromUrl}}"><a class="spell-link">{{name}}<a><span>✅</span></li>
+    {{else}}
+      <li class="list-group-item" data-isKnown="false" data-spellId="{{#getIdFromUrl url}}{{/getIdFromUrl}}"><a class="spell-link">{{name}}<a></li>
+    {{/if}}
+  {{/each}}
+</ul>
+
+<style media="screen">
+  ul#all-spells-list span {
+    top:0;
+    font-size:2em;
+    position:absolute;
+    right:1em;
+    text-decoration: none;
+  }
+
+  h3.empty {
+    padding:3em
+  }
+</style>
+
+<!-- LOGIC below -->
+<script type="text/javascript">
+  $(`ul#all-spells-list > li`).click(function(){
+    var el= $(this);
+    var state = dndSpellbook.state;
+    console.log('clicked');
+    $.when(state.promises.spellModalTemplate, $.getJSON(`http://www.dnd5eapi.co/api/spells/${el.data().spellid}`)).done(function (spellModalTemplate, spellData) {
+      state.containers.appContent.append(Handlebars.compile(spellModalTemplate[0])(spellData[0]));
+      $(`#spell-modal`).modal('show');
+    })
+  })
+</script>
