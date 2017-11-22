@@ -56,7 +56,7 @@ window.dndSpellbook = (function () {
   };
 
   var matchesSearchParam = function (el) {
-    return el.name.toLowerCase().indexOf(state.searchParam) > -1;
+    return el.name.toLowerCase().indexOf(state.searchParam.toLowerCase()) > -1;
   };
 
   var getIdFromUrl = function (url) {
